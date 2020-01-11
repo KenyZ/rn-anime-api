@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\myfiles\Sites\rn-anime-api\node_modules\@babel\generator\node_modules\.bin'
+  Error: EPERM: operation not permitted, unlink 'C:\myfiles\Sites\rn-anime-api\node_modules\@babel\plugin-transform-runtime\node_modules\.bin'
 
 npm manifest: 
   {

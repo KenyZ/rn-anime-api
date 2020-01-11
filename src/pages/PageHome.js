@@ -12,10 +12,16 @@ import {
     FlatList,
     Image,
 } from 'react-native'
+import {
+    Svg,
+    Rect,
+    Circle
+} from 'react-native-svg'
 
 
 import Utils from '../Utils'
-import AppStyles from '../AppStyles'
+import IconRating from '../shared/icons/icon.rating'
+import MainTheme from '../MainTheme'
 
 const TAB_RECOMMENDED = "TAB_RECOMMENDED"
 const TAB_POPULAR = "TAB_POPULAR"
@@ -35,13 +41,12 @@ export default function PageHome(){
      * HOOKS
      */
 
-     useEffect(() => {
+    const fetchPopularList = () => {
 
         try {
             fetch("https://api.jikan.moe/v3/top/anime/")
             .then(response => response.json())
             .then(fetchedData => {
-                console.log({fetchedData})
                 setPopularList(fetchedData.top)
             })
         } catch (FetchingPopularListError) {
@@ -52,34 +57,12 @@ export default function PageHome(){
 
         }
 
-     }, [])
+    }
+
+     useEffect(fetchPopularList, [])
     /**
      * PRIVATES
      */
-
-    const data = [
-        {
-            id: 1,
-            title: "The World of Abstract Art",
-            img: `https://picsum.photos/id/${10}/300/300`
-        },
-        {
-            id: 2,
-            title: "The World of Abstract Art",
-            img: `https://picsum.photos/id/${20}/300/300`
-        },
-
-        {
-            id: 3,
-            title: "The World of Abstract Art",
-            img: `https://picsum.photos/id/${30}/300/300`
-        },
-        {
-            id: 4,
-            title: "The World of Abstract Art",
-            img: `https://picsum.photos/id/${40}/300/300`
-        },
-    ]
 
     /**
      * EVENTS
@@ -116,7 +99,7 @@ export default function PageHome(){
                         ]}
                         onPress={onPressTab(TAB_POPULAR)}
                     >
-                        <Text style={styles.tabsNav_item_text}>Popular</Text>
+                        <Text style={styles.tabsNav_item_text}>POPULAR</Text>
                     </TouchableHighlight>
 
                     {/* <TouchableHighlight 
@@ -151,9 +134,16 @@ export default function PageHome(){
                                             style={styles.tabsList_panel_item_img}
                                         />
                                         <View style={styles.tabsList_panel_item_body}>
-                                            <Text style={styles.tabsList_panel_item_body_text}>{item.title}</Text>
+                                            <Text ellipsizeMode={"tail"} numberOfLines={2} style={styles.tabsList_panel_item_body_title}>{item.title}</Text>
+                                            <Text style={styles.tabsList_panel_item_body_rowText}>Type: {item.type}</Text>
+                                            {
+                                                item.type !== "Movie" && (
+                                                    <Text style={styles.tabsList_panel_item_body_rowText}>Episodes: {item.episodes}</Text>
+                                                )
+                                            }
                                             <View style={styles.tabsList_panel_item_body_rating}>
-                                       
+                                                <IconRating color={MainTheme.palette.purple[300]} style={styles.tabsList_panel_item_body_rating_icon}/>
+                                                <Text style={styles.tabsList_panel_item_body_rating_text}>{item.score}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -175,16 +165,16 @@ const styles = StyleSheet.create({
 
     header: {
         flex: .55,
-        backgroundColor: "#4B28E6",
+        backgroundColor: MainTheme.palette.purple[700],
         color: "#fff",
-        paddingTop: AppStyles.spacing(5.5),
-        paddingBottom: AppStyles.spacing(2),
+        paddingTop: MainTheme.spacing(5.5),
+        paddingBottom: MainTheme.spacing(2),
         borderBottomLeftRadius: 25,
     },
 
         header_title: {
-            paddingHorizontal: AppStyles.spacing(2),
-            marginBottom: AppStyles.spacing(2),
+            paddingHorizontal: MainTheme.spacing(2),
+            marginBottom: MainTheme.spacing(2),
         },
 
             header_title_text: {
@@ -195,7 +185,7 @@ const styles = StyleSheet.create({
 
     tabsNav: {
         flexDirection: "row",
-        marginBottom: AppStyles.spacing(1)
+        marginBottom: MainTheme.spacing(1)
     },
 
     tabsNav_item: {
@@ -223,31 +213,53 @@ const styles = StyleSheet.create({
 
             tabsList_panel_item: {
                 flex: 1,
-                width: 240,
-                marginRight: AppStyles.spacing(2),
-                borderRadius: AppStyles.spacing(1.5),
+                width: 250,
+                marginRight: MainTheme.spacing(2),
+                borderRadius: MainTheme.spacing(1.5),
                 backgroundColor: "#fff",
-                padding: AppStyles.spacing(1.5),
+                padding: MainTheme.spacing(1.5),
                 flexDirection: "row"
             },
 
                 tabsList_panel_item$firstChild: {
-                    marginLeft: AppStyles.spacing(2),
+                    marginLeft: MainTheme.spacing(2),
                 },
 
                 tabsList_panel_item_img: {
                     width: 90,
                     height: "100%",
                     borderRadius: 8,
-                    marginRight: AppStyles.spacing(1)
+                    marginRight: MainTheme.spacing(1)
                 },
 
                 tabsList_panel_item_body: {
                     flex: 1,
                 },
 
-                    tabsList_panel_item_body_text: {
+                    tabsList_panel_item_body_title: {
                         fontWeight: "700",
-                        fontSize: 18
+                        fontSize: 18,
                     },
+
+                    tabsList_panel_item_body_rowText: {
+                        color: MainTheme.palette.dark[800],
+                        fontWeight: "700",
+                        marginTop: MainTheme.spacing(.3)
+                    },
+                    
+                    tabsList_panel_item_body_rating: {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginTop: MainTheme.spacing(.3)
+
+                    },
+
+                        tabsList_panel_item_body_rating_icon: {
+                            marginRight: MainTheme.spacing(.5),
+                        },
+
+                        tabsList_panel_item_body_rating_text: {
+                            fontWeight: "700",
+                            color: MainTheme.palette.purple[300]
+                        }
 })

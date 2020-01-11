@@ -25,6 +25,11 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "android": {
+      "package": "com.kenyz.rsanimeapi"
+    },
+    "description": "",
+    "githubUrl": "https://github.com/KenyZ/rn-anime-api"
   }
 }
